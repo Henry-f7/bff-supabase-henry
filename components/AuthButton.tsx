@@ -1,27 +1,31 @@
-import { createClient } from "@/utils/supabase/server";
+'use client';
+import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
+import { UserResponse } from "@supabase/supabase-js";
 
-export default async function AuthButton() {
+const AuthButton = () => {
   const supabase = createClient();
+  const [user, setUser] = useState<UserResponse>();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    supabase.auth.getUser().then(data => {
+      setUser(data);
+    });
+  }, [])
 
   const signOut = async () => {
-    "use server";
-
     const supabase = createClient();
     await supabase.auth.signOut();
     return redirect("/login");
   };
 
-  return user ? (
+  return user?.data.user ? (
     <div className="flex items-center gap-4">
-      Hey, {user.email}!
+      Hey, {user?.data.user.email}!
       <form action={signOut}>
-        <button className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+        <button className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover ">
           Logout
         </button>
       </form>
@@ -29,9 +33,11 @@ export default async function AuthButton() {
   ) : (
     <Link
       href="/login"
-      className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
+      className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover bg-blue-500"
     >
       Login
     </Link>
   );
 }
+
+export default AuthButton;
