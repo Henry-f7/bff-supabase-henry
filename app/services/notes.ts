@@ -8,16 +8,22 @@ export const fetchAllNotes = async (): Promise<Data[]> => {
     return (data ?? []) as Data[];
 }
 
+export const fetchNotesById = async (id: string): Promise<Data[]> => {
+    const { data, status, request } = await axiosClient("GET", `/notes/${id}`);
+
+    return (data ?? []) as Data[];
+}
+
 export const createNote = async (note: AddNote): Promise<Data> => {
     const response = await axiosClient("POST", "/notes", note);
     return response.data;
 }
 
-export const updateNote = async (id: string, updatedNote: Data): Promise<Data> => {
-    const response = await axios.put<Data>(`/notes/${id}`, updatedNote);
+export const updateNote = async (id: string, updatedNote: AddNote): Promise<Data> => {
+    const response = await axiosClient("PATCH", `/notes/${id}`, updatedNote);
     return response.data;
 }
 
 export const deleteNote = async (id: string): Promise<void> => {
-    await axios.delete(`/notes/${id}`);
+    await axiosClient("DELETE", `/notes/${id}`);
 }

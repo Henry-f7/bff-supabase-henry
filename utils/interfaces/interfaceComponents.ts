@@ -1,10 +1,11 @@
 import { ButtonHTMLAttributes, ChangeEvent } from "react";
 
 export interface NoteProps {
+    id: string
     title: string;
     content: string;
-    onEdit: () => void;
-    onDelete: () => void;
+    onEdit: (id: string) => void;
+    onDelete: (id: string) => void;
 }
 
 export interface NoteHeaderProps {
@@ -24,6 +25,8 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export interface FormProps {
+    titleForm?: string;
+    contentForm?: string;
     onChange: (title: string, content: string, e: React.FormEvent<HTMLFormElement>) => void;
     onCancel: () => void;
 }

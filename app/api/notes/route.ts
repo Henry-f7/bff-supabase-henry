@@ -10,7 +10,7 @@ export async function GET(request: Request, Context: any) {
 
     let { data: notes, error } = await supabase
         .from('notes')
-        .select()
+        .select().order('id', { ascending: false })
 
     if (error) {
         console.error('ERROR======>', error);
@@ -29,10 +29,10 @@ export async function POST(request: Request, Context: any) {
 
     const { title, content } = await request.json()
 
-    const { data:notes, error } = await supabase
+    const { data: notes, error } = await supabase
         .from('notes')
         .insert([
-            { title , content , created_by: user?.email! },
+            { title, content, created_by: user?.email! },
         ])
         .select()
 
