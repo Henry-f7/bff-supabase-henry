@@ -7,7 +7,7 @@ import { createClient } from "@/utils/supabase/client";
 import FetchDataSteps from "@/components/tutorial/FetchDataSteps";
 import Header from "@/components/Header";
 import { redirect } from "next/navigation";
-import { fetchAllNotes } from '../services/notes';
+import { deleteNote, fetchAllNotes } from '../services/notes';
 import Note from "@/components/note/Note";
 import ActionButton from "@/components/note/ActionButton";
 import { ActionResult } from 'next/dist/server/app-render/types';
@@ -29,12 +29,15 @@ const ProtectedPage = () => {
   const [dataNotes, setDataNotes] = useState<Data[]>([]);
   const [noteMode, setNoteMode] = useState<NoteMode>();
   const [idNote, setIdNote] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetchAllNotes().then(data => {
       setDataNotes(data);
+    }).finally(() => {
+      setLoading(false);
     });
-  }, []);
+  }, [dataNotes]);
 
   useEffect(() => {
     if (noteMode == NoteMode.Add) {
@@ -49,13 +52,35 @@ const ProtectedPage = () => {
     setNoteMode(NoteMode.Add);
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = (id: string) => {
+    setIdNote(id);
     setNoteMode(NoteMode.Edit);
   };
 
-  const handleDeleteClick = () => {
-    console.log("Eliminar");
+  const handleDeleteClick = (id: string) => {
+    deleteNote(id);
   };
+
+  const renderNotes = () => {
+    return (
+      loading ? (
+        <div className="px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
+          <p>Loading...</p>
+        </div>
+      ) : (
+        dataNotes.map(result => {
+          return <Note
+            key={result.id}
+            id={result.id.toString()}
+            title={result.title}
+            content={result.content}
+            onEdit={handleEditClick}
+            onDelete={handleDeleteClick}
+          />
+        })
+      )
+    )
+  }
 
   return (
     <div className="flex-1 w-full flex flex-col gap-5 px-3">
@@ -78,11 +103,7 @@ const ProtectedPage = () => {
           />
         </div>
         <div className="inline-grid grid-cols-6 gap-4 border-double border-4 border-sky-500 rounded p-5" >
-          {
-            dataNotes.map(result => {
-              return <Note key={result.id} title={result.title} content={result.content} onEdit={handleEditClick} onDelete={handleDeleteClick} />
-            })
-          }
+          {renderNotes()}
         </div>
       </div>
 

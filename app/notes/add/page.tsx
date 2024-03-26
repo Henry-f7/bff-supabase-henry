@@ -1,7 +1,6 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import InfoNoteForm from '@/components/forms/InfoNoteForm';
-import { AddNote } from '@/utils/interfaces/interfaces';
 import { useRouter } from "next/navigation";
 import { createNote } from '@/app/services/notes';
 
