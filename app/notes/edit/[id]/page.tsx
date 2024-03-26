@@ -36,7 +36,7 @@ const EditNoteForm = ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-14 py-8">
       {loading ? (
         <div className="px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
           <p>Loading...</p>

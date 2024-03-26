@@ -1,23 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import DeployButton from "@/components/DeployButton";
 import AuthButton from "@/components/AuthButton";
-import { createClient } from "@/utils/supabase/client";
-import FetchDataSteps from "@/components/tutorial/FetchDataSteps";
-import Header from "@/components/Header";
-import { redirect } from "next/navigation";
 import { deleteNote, fetchAllNotes } from '../services/notes';
 import Note from "@/components/note/Note";
 import ActionButton from "@/components/note/ActionButton";
-import { ActionResult } from 'next/dist/server/app-render/types';
-interface Data {
-  id: number,
-  created_at: string,
-  title: string,
-  content: string,
-  created_by: string
-}
+import { Data } from '@/utils/interfaces/interfaces';
 
 enum NoteMode {
   Add,
@@ -83,15 +71,14 @@ const ProtectedPage = () => {
   }
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-5 px-3">
-      {/* <div className="w-full">
+    <div className="flex-1 w-full flex flex-col gap-5">
+      <div className="w-full">
         <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-          <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
-            <DeployButton />
+          <div className="w-full max-w-4xl flex justify-end items-center p-3 text-sm">
             <AuthButton />
           </div>
         </nav>
-      </div> */}
+      </div>
 
       <div className="container mx-auto px-4">
         <div className="p-3">
@@ -102,7 +89,7 @@ const ProtectedPage = () => {
             onActionButton={handleAddClick}
           />
         </div>
-        <div className="inline-grid grid-cols-6 gap-4 border-double border-4 border-sky-500 rounded p-5" >
+        <div className="inline-grid grid-cols-6 gap-4" >
           {renderNotes()}
         </div>
       </div>
@@ -117,7 +104,6 @@ const ProtectedPage = () => {
             rel="noreferrer"
           >
             Supabase
-
           </a>
         </p>
       </footer>
